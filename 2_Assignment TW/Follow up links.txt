@@ -1,0 +1,30 @@
+1) https://in.mathworks.com/help/deeplearning/ug/train-and-apply-multilayer-neural-networks.html
+
+3) https://in.mathworks.com/help/deeplearning/ug/how-dynamic-neural-networks-work.html
+
+4) https://in.mathworks.com/help/deeplearning/ref/trainscg.html
+
+5) https://in.mathworks.com/help/deeplearning/ug/design-time-series-time-delay-neural-networks.html
+
+
+Completed
+
+1) https://in.mathworks.com/help/deeplearning/ug/multilayer-neural-networks-and-backpropagation-training.html
+
+2) https://in.mathworks.com/help/deeplearning/ug/multilayer-neural-network-architecture.html
+
+3) https://in.mathworks.com/help/deeplearning/ug/prepare-data-for-multilayer-neural-networks.html
+
+4) https://in.mathworks.com/help/deeplearning/ug/create-configure-and-initialize-multilayer-neural-networks.html
+
+5) https://in.mathworks.com/help/deeplearning/ug/analyze-neural-network-performance-after-training.html
+
+6) https://in.mathworks.com/help/deeplearning/ug/train-and-apply-multilayer-neural-networks.html#bss332n-1
+
+7) https://in.mathworks.com/help/deeplearning/ug/limitations-and-cautions.html
+
+8) https://in.mathworks.com/help/deeplearning/ug/choose-neural-network-input-output-processing-functions.html
+
+9) https://in.mathworks.com/help/deeplearning/ug/divide-data-for-optimal-neural-network-training.html
+
+10) https://in.mathworks.com/help/deeplearning/ug/neural-networks-with-parallel-and-gpu-computing.html
