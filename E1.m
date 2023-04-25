@@ -32,7 +32,7 @@ for i = 1:length(nodes)
             [X_train, y_train, X_test, y_test] = train_test_split(x, t);
             
             % Train the neural network on the training set
-            net = patternnet(nodes(i), 'trainscg');
+            net = patternnet(nodes(i), 'trainrp');
             net.trainParam.epochs = epochs(j);
             net.trainParam.lr = 0.01; 
             net = train(net, X_train, y_train);
@@ -158,6 +158,3 @@ xlabel('Epochs');
 ylabel('Standard Deviation');
 title('Standard Deviation of Test Classification Error Rate for All Nodes');
 legend(cellstr(num2str(nodes')), 'Location', 'best');
-
-
-

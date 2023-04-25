@@ -4,4 +4,6 @@ hiddenLayerSize = hidden;
 net = patternnet(hiddenLayerSize, trainFcn); 
 net=configure(net,xtrain,ytrain); 
 net.trainParam.epochs=epochs; 
-%[net,tr] = train(net,xtrain,ytrain); mod=net; end
+[net,tr] = train(net,xtrain,ytrain); 
+mod=net; 
+end

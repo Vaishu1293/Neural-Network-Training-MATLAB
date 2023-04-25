@@ -6,10 +6,13 @@ variance1 = eye(2); % Variance is identity matrix
 
 % Parameters for Class 2
 mean2 = [2, 0];
-variance2 = [4, 0; 0, 4]; % Variance is diagonal matrix
+variance2 = [2, 0; 0, 2]; % Variance is diagonal matrix
 
 % Generate random variables for Class 1 and Class 2
-num_samples = 1650; % Number of samples for each class
+% num_samples = 1650; % Number of samples for each class
+num_samples = 10; % Number of samples for each class
+split_idx = 0.1*2*num_samples;
+start = split_idx + 1;
 class1_samples = mvnrnd(mean1, variance1, num_samples);
 class2_samples = mvnrnd(mean2, variance2, num_samples);
 
@@ -26,77 +29,60 @@ labels = labels(shuffled_indices, :);
 
 %% STEP 02:
 
-% Split the data into training and testing sets
-train_data = data(1:300, :);
-train_labels = labels(1:300, :);
-test_data = data(301:end, :);
-test_labels = labels(301:end, :);
+train_data = data(1:split_idx, :);
+train_labels = labels(1:split_idx, :);
+test_data = data(start:end, :);
+test_labels = labels(start:end, :);
 
 % Set the number of hidden units and epochs for the neural network
-hidden_units = 60;
-epochs = 38;
+[hidden_units, epochs, train_accuracy, test_accuracy] = estimate_node_epoch(train_data', train_labels', test_data', test_labels');
 
-% Create the neural network model
-baseClassifier = patternnet(hidden_units);
-
-% Set the training parameters for the model
-baseClassifier.trainParam.epochs = epochs;
-baseClassifier.trainFcn = 'trainscg';
-
-% Train the neural network
-baseClassifier = train(baseClassifier, train_data', train_labels');
-
-% Test the neural network
-train_predictions = baseClassifier(train_data');
-train_accuracy = sum(train_predictions' == train_labels) / size(train_labels, 1);
-test_predictions = baseClassifier(test_data');
-test_accuracy = sum(test_predictions' == test_labels) / size(test_labels, 1);
-
-fprintf('Train Accuracy: %.2f%%\n', train_accuracy * 100);
-fprintf('Test Accuracy: %.2f%%\n', test_accuracy * 100);
+fprintf('Train Accuracy: %.2f%%\n', train_accuracy);
+fprintf('Test Accuracy: %.2f%%\n', test_accuracy);
 
 %% STEP 03:
 
-% Set the number of base classifiers in the ensemble
-num_base_classifiers = 10;
+[ensemble_train_accuracy, ensemble_test_accuracy, y_pred_train, y_pred_test] = get_ensemble_accuracy(train_data', train_labels', test_data', test_labels', hidden_units, epochs);
 
-% Initialize arrays to store ensemble predictions
-ensemble_train_predictions = zeros(size(train_labels));
-ensemble_test_predictions = zeros(size(test_labels));
+fprintf('Ensemble Train Accuracy: %.2f%%\n', ensemble_train_accuracy);
+fprintf('Ensemble Test Accuracy: %.2f%%\n', ensemble_test_accuracy);
 
-% Train and predict with multiple base classifiers
-for i = 1:num_base_classifiers
-    % Create a new instance of the base classifier with the optimal architecture
-    baseClassifier = patternnet(hidden_units);
-    baseClassifier.trainParam.epochs = epochs;
-    baseClassifier.trainFcn = 'trainscg';
-    
-    % Train the base classifier
-    baseClassifier = train(baseClassifier, train_data', train_labels');
-    % Predict with the base classifier on training and testing data
-    train_predictions = baseClassifier(train_data');
-    test_predictions = baseClassifier(test_data');
-    
-    % Update ensemble predictions with the current base classifier's predictions
-    ensemble_train_predictions = ensemble_train_predictions + train_predictions';
-    ensemble_test_predictions = ensemble_test_predictions + test_predictions';
-end
+%% STEP 04 PLOT DECISION BOUNDARY
 
-% Normalize the ensemble predictions by dividing by the number of base classifiers
-ensemble_train_predictions = ensemble_train_predictions / num_base_classifiers;
-ensemble_test_predictions = ensemble_test_predictions / num_base_classifiers;
+% Create a grid of points
+x_min = min(data(:,1)) - 1;
+x_max = max(data(:,1)) + 1;
+y_min = min(data(:,2)) - 1;
+y_max = max(data(:,2)) + 1;
+[x, y] = meshgrid(x_min:0.1:x_max, y_min:0.1:y_max);
+xy = [x(:), y(:)];
+disp(size(x));
+disp(size(y));
+% Get predictions for the grid of points using the trained neural network or ensemble
+y_pred_test = encode_data(y_pred_test);
+disp(size(y_pred_test));
+[~, y_pred_test] = max(y_pred_test);
 
-% Round the ensemble predictions to obtain the final ensemble predictions
-ensemble_train_predictions = round(ensemble_train_predictions);
-ensemble_test_predictions = round(ensemble_test_predictions);
+% Plot the predictions as a contour plot
+figure;
+contourf(x, y, reshape(y_pred_test, size(x)), 'LineStyle', 'none');
+hold on;
 
-% Calculate the accuracy of the ensemble on training and testing data
-ensemble_train_accuracy = sum(ensemble_train_predictions == train_labels, 'all') / numel(train_labels);
-ensemble_test_accuracy = sum(ensemble_test_predictions == test_labels, 'all') / numel(test_labels);
+% Plot the Bayes boundary as a circle
+theta = linspace(0, 2*pi, 100);
+x_circle = -2/3 + 2.34*cos(theta);
+y_circle = 2.34*sin(theta);
+plot(x_circle, y_circle, 'r', 'LineWidth', 2);
 
-fprintf('Ensemble Train Accuracy: %.2f%%\n', ensemble_train_accuracy * 100);
-fprintf('Ensemble Test Accuracy: %.2f%%\n', ensemble_test_accuracy * 100);
+% Set the axis limits and labels
+xlim([x_min, x_max]);
+ylim([y_min, y_max]);
+xlabel('Feature 1');
+ylabel('Feature 2');
+title('Decision Boundary and Bayes Boundary');
 
+% Show the legend
+legend('Decision Boundary', 'Bayes Boundary');
 
 
 

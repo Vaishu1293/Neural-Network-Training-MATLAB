@@ -1,11 +1,9 @@
 [x, t] = cancer_dataset;
 x = x;
 t = t;
-%x = x(:, 1:25);
-%t = t(:, 1:25);
 
 optimalEpoch = 16; % optimal epoch
-optimalHiddenLayers = 8; % optimal hidden layers
+optimalHiddenLayers = 32; % optimal hidden layers
 num_combinations = 10; % Number of random combinations to generate
 
 % Initialize cell array to store the random combinations as pairs
@@ -28,18 +26,20 @@ disp(random_combinations);
 numIterations = 30;
 numBaseClassifiers = 15;
 
-ensemblePrediction = cell(1, length(random_nodes));
-ensembleTestAccuracy = zeros(1, length(random_nodes));
-ensembleTrainAccuracy = zeros(1, length(random_nodes));
+ensemblePrediction = cell(1, num_combinations);
+ensembleTrainPrediction = cell(1, num_combinations);
+ensembleTestAccuracy = zeros(1, num_combinations);
+ensembleTrainAccuracy = zeros(1, num_combinations);
 
-for i = 1:length(random_nodes) % i.e 12
+for i = 1:num_combinations % i.e 12
     baseClassifiers = cell(1, numBaseClassifiers);
     y_pred_ind = cell(1, numBaseClassifiers);
+    y_pred_train_ind = cell(1, numBaseClassifiers);
     trainAccuracies_ind = zeros(1, numBaseClassifiers);
     testAccuracies_ind = zeros(1, numBaseClassifiers);
     
-    nodes = random_nodes(i);
-    epoch = random_epochs(i);
+    nodes = random_combinations{i}(1,1);
+    epoch = random_combinations{i}(1,2);
 
     for iter = 1:numIterations
         % Get Train Test split
@@ -49,25 +49,25 @@ for i = 1:length(random_nodes) % i.e 12
         for j = 1:numBaseClassifiers
             baseClassifier = build_model_function(X_train, y_train, nodes, epoch, j);
             baseClassifiers{j} = baseClassifier; % Store base classifier in cell array
-            [trainAccuracies_ind(j), testAccuracies_ind(j), y_pred_ind{j}] = calculate_accuracy(baseClassifier, X_train, y_train, X_test, y_test);
+            [trainAccuracies_ind(j), testAccuracies_ind(j), y_pred_ind{j}, y_pred_train_ind{j}] = calculate_accuracy(baseClassifier, X_train, y_train, X_test, y_test);
         end
 
         % Train Accuracy of the ensemble
         ensembleTrainAccuracy(i) = mean(trainAccuracies_ind);
 
         % Call Majority Voting Function
+        [ensembleTrainPrediction{i}] = majority_vote(y_pred_train_ind, X_train);
         [ensemblePrediction{i}] = majority_vote(y_pred_ind, X_test);
-        % encode y_test
-        y_test_en = encode_data(y_test);
+        
         %Calculate accuracy of ensemble:
-        [ensembleTestAccuracy(i)] = calculate_accuracy_ensemble(ensemblePrediction{i}, y_test_en, y_test);
+        [ensembleTrainAccuracy(i)] = calculate_accuracy_ensemble(ensembleTrainPrediction{i}, y_train);
+        [ensembleTestAccuracy(i)] = calculate_accuracy_ensemble(ensemblePrediction{i}, y_test);
     end
 end
 
+disp(random_combinations);
 disp(ensembleTestAccuracy);
 disp(ensembleTrainAccuracy);
-
-% Overall Accuracy of ensemble:
 
 TrainAccuracy = mean(ensembleTrainAccuracy)
 TestAccuracy = mean(ensembleTestAccuracy)
@@ -85,5 +85,3 @@ ylabel('Accuracy');
 title('Ensemble Accuracy vs. Number of Base Classifiers');
 legend('Train Accuracy', 'Test Accuracy');
 grid on;
-
-

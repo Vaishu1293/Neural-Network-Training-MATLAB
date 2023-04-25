@@ -17,7 +17,7 @@ final_train_loss=[];
 
 for a=1:15 
     train_error_mod{a}=[];
-
+    test_error_mod{a} = [];
     hidden=randi([1 50],1,1) 
     ep=randi([1 50],1,1) 
     mod{a}=model_function(x,y,hidden,ep); 

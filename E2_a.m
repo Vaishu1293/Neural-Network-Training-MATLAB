@@ -13,8 +13,8 @@ testAccuracies = zeros(1, numBaseClassifiers); % Store test accuracies for each 
 for iter = 1:numIterations
     [X_train, y_train, X_test, y_test] = train_test_split(x, t);
 
-    optimalEpoch = 32;
-    optimalHiddenLayers = 32;
+    optimalEpoch = 3;
+    optimalHiddenLayers = 5;
 
     for i = 1:numBaseClassifiers
         baseClassifier = build_model_function(X_train, y_train, optimalHiddenLayers, optimalEpoch, i);
@@ -34,6 +34,8 @@ for iter = 1:numIterations
     disp(['Test Accuracies: ', num2str(testAccuracies)]);
 
     disp('Average Mean Train and Test Accuracies:');
+    disp(['Average Mean Train Accuracy: ', num2str(avgMeanTrainAccuracy), '%']);
+    disp(['Average Mean Test Accuracy: ', num2str(avgMeanTestAccuracy), '%']);
     disp(['Average Mean Train Accuracy: ', num2str(avgMeanTrainAccuracy), '%']);
     disp(['Average Mean Test Accuracy: ', num2str(avgMeanTestAccuracy), '%']);
 end

@@ -1,4 +1,5 @@
 [x,t]=cancer_dataset; 
+mod = cell(1,25);
 for a=1:25 
     train_error_mod{a}=[]; 
     test_error_mod{a}=[]; 
@@ -48,4 +49,5 @@ for bla=3:25
     end 
 end
 
-
+disp(cum_test_error_var);
+disp(cum_train_error_var);

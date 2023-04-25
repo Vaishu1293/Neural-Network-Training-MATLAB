@@ -3,9 +3,10 @@ for a=1:15
     hl_ep=[]; 
     train_error_mod{a}=[]; 
     test_error_mod{a}=[]; 
-    %hidden=randi([33 100],1,1); 
-    ep=randi([1 100],1,1) 
-    %[hidden,ep] mod{a}=model_function(x,t,16,ep); 
+    hidden=randi([33 100],1,1); 
+    ep=randi([17 100],1,1); 
+%     [hidden,ep]
+    mod{a}=model_function(x,t,2,3); 
 end 
 train_error_ensemble=[]; 
 test_error_ensemble=[];
@@ -37,4 +38,7 @@ final_test_mean=[];
 for a=1:15 
     final_train_mean=[final_train_mean,mean(train_error_mod{a})]; 
     final_test_mean=[final_test_mean,mean(test_error_mod{a})]; 
-                                                                                                                                        ,M KOL      7end
+end
+
+disp(final_train_mean);
+disp(final_test_mean);

@@ -5,5 +5,6 @@ ypred_test = mod(xtest);
 tind_train = vec2ind(ytrain); 
 yind_train = vec2ind(ypred_train); 
 percentErrors_train = sum(tind_train ~= yind_train)/numel(tind_train); 
-tind_test = vec2ind(ytest); yind_test = vec2ind(ypred_test); 
+tind_test = vec2ind(ytest); 
+yind_test = vec2ind(ypred_test); 
 percentErrors_test = sum(tind_test ~= yind_test)/numel(tind_test);

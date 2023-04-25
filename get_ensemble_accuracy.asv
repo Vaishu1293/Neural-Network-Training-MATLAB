@@ -1,0 +1,41 @@
+function [ensemble_train_accuracy, ensemble_test_accuracy] = get_ensemble_accuracy(X_train,y_train,X_test,y_test, optimalEpoch, optimalHiddenLayers) 
+numIterations = 30;
+
+numBaseClassifiers = 15;
+
+
+ensembleTestAccuracy = zeros(1, numBaseClassifiers);
+ensembleTrainAccuracy = zeros(1, numBaseClassifiers);
+
+y_pred_ind = cell(1, numBaseClassifiers);
+y_pred_train_ind = cell(1, numBaseClassifiers);
+
+trainAccuracies_ind = zeros(1, numBaseClassifiers);
+testAccuracies_ind = zeros(1, numBaseClassifiers);
+
+for iter = 1:numIterations
+    % Build Classifiers
+    for j = 1:numBaseClassifiers
+        baseClassifier = build_model_function(X_train, y_train, optimalHiddenLayers, optimalEpoch, j);
+        [trainAccuracies_ind(j), testAccuracies_ind(j), y_pred_ind{j}, y_pred_train_ind{j}] = calculate_accuracy(baseClassifier, X_train, y_train, X_test, y_test);
+    end
+    % Call Majority Voting Function
+    [ensembleTrainPrediction] = majority_vote(y_pred_train_ind, X_train);
+    [ensembleTestPrediction] = majority_vote(y_pred_ind, X_test);
+    
+    %Calculate accuracy of ensemble:
+    [ensembleTrainAccuracy(i)] = calculate_accuracy_ensemble(ensembleTrainPrediction{i}, y_train);
+    [ensembleTestAccuracy(i)] = calculate_accuracy_ensemble(ensemblePrediction{i}, y_test);
+end
+
+% Overall Accuracy of ensemble:
+
+TrainAccuracy = mean(ensembleTrainAccuracy);
+TestAccuracy = mean(ensembleTestAccuracy);
+disp(numBaseClassifiers);
+disp("Train");
+disp(ensembleTrainAccuracy);
+disp("test");
+disp(ensembleTestAccuracy);
+disp(['Ensemble Train Accuracy: ', num2str(TrainAccuracy), '%']);
+disp(['Ensemble Test Accuracy: ', num2str(TestAccuracy), '%']);

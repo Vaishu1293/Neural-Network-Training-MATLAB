@@ -25,23 +25,3 @@ function ensemblePrediction = majority_vote(Prediction, X_test)
         i = i+1;
     end
 end
-
-% ensemblePrediction = zeros(1,size(X_test,2));
-%     all_results = [0,1]; %possible outcomes
-%     i = 1;
-%     for col = 1:2:size(X_test,2)*2
-%         election_array = zeros(1, length(all_results));
-%         for row = 1:length(Prediction) 
-%             temp = Prediction{row};
-%             if max(temp(col), temp(col+1))==temp(col)
-%                 index = 1;
-%             else
-%                 index = 2;
-%             end
-%             election_array(index) = election_array(index) + 1;
-%         end
-%         [~,I] = max(election_array);
-%         ensemblePrediction(i) = all_results(I);
-%         i = i+1;
-%     end
-% end
