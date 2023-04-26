@@ -8,13 +8,13 @@ numBaseClassifiers = 15;
 baseClassifiers = cell(1, numBaseClassifiers);
 
 trainAccuracies = zeros(1, numBaseClassifiers);
-testAccuracies = zeros(1, numBaseClassifiers); % Store test accuracies for each base classifier
+testAccuracies = zeros(1, numBaseClassifiers);
 
 for iter = 1:numIterations
     [X_train, y_train, X_test, y_test] = train_test_split(x, t);
 
-    optimalEpoch = 3;
-    optimalHiddenLayers = 5;
+    optimalEpoch = 16;
+    optimalHiddenLayers = 32;
 
     for i = 1:numBaseClassifiers
         baseClassifier = build_model_function(X_train, y_train, optimalHiddenLayers, optimalEpoch, i);
@@ -39,9 +39,6 @@ for iter = 1:numIterations
     disp(['Average Mean Train Accuracy: ', num2str(avgMeanTrainAccuracy), '%']);
     disp(['Average Mean Test Accuracy: ', num2str(avgMeanTestAccuracy), '%']);
 end
-
-% Bar graph for
-
 
 % Bar graph for model accuracies
 figure;

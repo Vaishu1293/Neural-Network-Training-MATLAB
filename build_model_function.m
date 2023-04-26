@@ -1,4 +1,4 @@
-function baseClassifier = build_model_function(x_train,y_train,nodes,epochs, j) 
+function baseClassifier = build_model_function(x_train,y_train,nodes,epochs, j)
 baseClassifier = patternnet(nodes);
 rng(j);
 baseClassifier = init(baseClassifier);

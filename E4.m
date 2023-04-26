@@ -2,15 +2,14 @@
 
 % Parameters for Class 1
 mean1 = [0, 0];
-variance1 = eye(2); % Variance is identity matrix
+variance1 = eye(2); 
 
 % Parameters for Class 2
 mean2 = [2, 0];
-variance2 = [2, 0; 0, 2]; % Variance is diagonal matrix
+variance2 = [2, 0; 0, 2];
 
 % Generate random variables for Class 1 and Class 2
-% num_samples = 1650; % Number of samples for each class
-num_samples = 10; % Number of samples for each class
+num_samples = 1650; % Number of samples for each class
 split_idx = 0.1*2*num_samples;
 start = split_idx + 1;
 class1_samples = mvnrnd(mean1, variance1, num_samples);
@@ -47,42 +46,61 @@ fprintf('Test Accuracy: %.2f%%\n', test_accuracy);
 fprintf('Ensemble Train Accuracy: %.2f%%\n', ensemble_train_accuracy);
 fprintf('Ensemble Test Accuracy: %.2f%%\n', ensemble_test_accuracy);
 
-%% STEP 04 PLOT DECISION BOUNDARY
-
-% Create a grid of points
-x_min = min(data(:,1)) - 1;
-x_max = max(data(:,1)) + 1;
-y_min = min(data(:,2)) - 1;
-y_max = max(data(:,2)) + 1;
-[x, y] = meshgrid(x_min:0.1:x_max, y_min:0.1:y_max);
-xy = [x(:), y(:)];
-disp(size(x));
-disp(size(y));
-% Get predictions for the grid of points using the trained neural network or ensemble
-y_pred_test = encode_data(y_pred_test);
-disp(size(y_pred_test));
-[~, y_pred_test] = max(y_pred_test);
-
-% Plot the predictions as a contour plot
-figure;
-contourf(x, y, reshape(y_pred_test, size(x)), 'LineStyle', 'none');
+%% STEP 04 PLOT DECISION BOUNDARY (modified code)
+% Find the indices for the label with value 1
+idx = find(y_pred_test(:, 1) > 0);
+% Get the features corresponding to the label with value 1
+label1 = test_data(idx, :);
+% Create a scatter plot with predicted labels as colors
+figure(1);
 hold on;
+gscatter(test_data(:, 1), test_data(:, 2), y_pred_test', 'rb', '.', 15);
+hold on;
+% Calculate the center of the circle
+x = mean(label1(:, 1))
+y = mean(label1(:, 2))
+x_var = cov(label1(:, 1))
+y_var = cov(label1(:, 2))
 
-% Plot the Bayes boundary as a circle
+% Calculate the radius of the circle
+r = sqrt(var(label1(:, 1))) * 2.5
+% Generate a range of angles for the circle
+th = 0:pi/50:2*pi;
+
+% Calculate the x-coordinates and y-coordinates of the circle
+x_circle = r*cos(th) + x;
+y_circle = r*sin(th) + y;
+
+% Plot the decision boundary
+plot(x_circle, y_circle, 'y', 'LineWidth', 3);
+
+% Add a legend
+legend('Class 1', 'Class 2', 'Decision Boundary');
+hold off;
+
+%% STEP 05 PLOT DECISION BOUNDARY
+
+%Plot the samples
+figure(2);
+hold on;
+scatter(class1_samples(:, 1), class1_samples(:, 2), 'MarkerFaceColor', 'blue');
+scatter(class2_samples(:, 1), class2_samples(:, 2), 'MarkerFaceColor', 'red');
+
+% Calculate the mean and variance of each class
+mu1 = mean(class1_samples)
+sigma1 = cov(class1_samples)
+mu2 = mean(class2_samples)
+sigma2 = cov(class2_samples)
+
+% Calculate the decision boundary as a circle
+center = (mu2 - mu1) * 2/3 + mu1; % center of the circle
+radius = 2.34; % radius of the circle
 theta = linspace(0, 2*pi, 100);
-x_circle = -2/3 + 2.34*cos(theta);
-y_circle = 2.34*sin(theta);
-plot(x_circle, y_circle, 'r', 'LineWidth', 2);
+x_circle = center(1) + radius*cos(theta);
+y_circle = center(2) + radius*sin(theta);
 
-% Set the axis limits and labels
-xlim([x_min, x_max]);
-ylim([y_min, y_max]);
-xlabel('Feature 1');
-ylabel('Feature 2');
-title('Decision Boundary and Bayes Boundary');
+% Plot the decision boundary
+plot(x_circle, y_circle, 'y', 'LineWidth', 2);
 
-% Show the legend
-legend('Decision Boundary', 'Bayes Boundary');
-
-
-
+% Add a legend
+legend('Class 1', 'Class 2', 'Decision Boundary');

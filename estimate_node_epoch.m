@@ -4,10 +4,10 @@ function [optimal_node, optimal_epoch, train_accuracy, test_accuracy] = estimate
 % epochs = randi([1 100],1,10);
 % nodes = sort(nodes)
 % epochs = sort(epochs)
-nodes = 60;
-epochs = 35;
+nodes = 100;
+epochs = 85;
 % Set the number of runs
-num_runs = 1;
+num_runs = 30;
 
 % Initialize arrays to store results
 final_train_error_mean = zeros(length(nodes), length(epochs));

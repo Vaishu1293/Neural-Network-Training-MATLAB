@@ -4,8 +4,7 @@ x = x;
 t = t;
 
 % Define X_train as the training data
-X_train = x; % or X_train = x'; depending on the data structure
-
+X_train = x; 
 % Definition of nodes and epochs
 nodes = [2,8,32];
 epochs = [ 1, 2, 4, 8, 16, 32,64];
@@ -42,8 +41,8 @@ for i = 1:length(nodes)
             y_test_pred = net(X_test);
 
             % Calculate the classification error rate for train and test sets
-            train_error_rates(k) = sum(round(y_train_pred) ~= y_train, 'all') / numel(y_train); % Update here
-            test_error_rates(k) = sum(round(y_test_pred) ~= y_test, 'all') / numel(y_test); % Update here
+            train_error_rates(k) = sum(round(y_train_pred) ~= y_train, 'all') / numel(y_train); 
+            test_error_rates(k) = sum(round(y_test_pred) ~= y_test, 'all') / numel(y_test); 
 
             % Calculate the train loss
             train_losses(k) = perform(net, y_train, y_train_pred);

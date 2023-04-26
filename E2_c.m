@@ -31,7 +31,7 @@ ensembleTrainPrediction = cell(1, num_combinations);
 ensembleTestAccuracy = zeros(1, num_combinations);
 ensembleTrainAccuracy = zeros(1, num_combinations);
 
-for i = 1:num_combinations % i.e 12
+for i = 1:num_combinations
     baseClassifiers = cell(1, numBaseClassifiers);
     y_pred_ind = cell(1, numBaseClassifiers);
     y_pred_train_ind = cell(1, numBaseClassifiers);

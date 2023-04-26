@@ -3,9 +3,10 @@ x = x;
 t = t;
 
 optimalEpoch = randi([1, 100], 1, 10); % optimal epoch
-optimalHiddenLayers = 8; % optimal hidden layers
+optimalEpoch = sort(optimalEpoch);
+optimalHiddenLayers = 32; % optimal hidden layers
 
-disp(optimalEpoch(3));
+disp(optimalEpoch);
 disp(length(optimalEpoch));
 
 numIterations = 30;

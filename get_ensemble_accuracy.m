@@ -1,7 +1,7 @@
 function [ensemble_train_accuracy, ensemble_test_accuracy, ensembleTrainPrediction, ensembleTestPrediction] = get_ensemble_accuracy(X_train,y_train,X_test,y_test, optimalEpoch, optimalHiddenLayers) 
-numIterations = 1;
+numIterations = 30;
 
-numBaseClassifiers = 3;
+numBaseClassifiers = 15;
 
 y_pred_ind = cell(1, numBaseClassifiers);
 y_pred_train_ind = cell(1, numBaseClassifiers);
